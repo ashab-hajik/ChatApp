@@ -1,0 +1,133 @@
+// Prisma schema for the WhatsApp-like chat application.
+// Run `npm run prisma:migrate` (inside server/) after setting DATABASE_URL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}
+
+enum ChatMemberRole {
+  MEMBER
+  ADMIN
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  googleId     String?  @unique
+  passwordHash String?
+  username     String?  @unique
+  fullName     String?
+  profileImage String?
+  bio          String?
+  isOnline     Boolean  @default(false)
+  lastSeen     DateTime @default(now())
+  profileComplete Boolean @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  chatMembers    ChatMember[]
+  messages       Message[]
+  messageReads   MessageRead[]
+  refreshTokens  RefreshToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("refresh_tokens")
+  @@index([userId])
+}
+
+model Chat {
+  id         String   @id @default(uuid())
+  isGroup    Boolean  @default(false)
+  groupName  String?
+  groupImage String?
+  createdBy  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  members  ChatMember[]
+  messages Message[]
+
+  @@map("chats")
+}
+
+model ChatMember {
+  id        String         @id @default(uuid())
+  chatId    String
+  userId    String
+  role      ChatMemberRole @default(MEMBER)
+  joinedAt  DateTime       @default(now())
+  // Set when this member "deletes" the chat (hides it from their list only). Cleared
+  // automatically the next time a new message arrives, so the chat reappears — same
+  // behavior as WhatsApp's per-device chat delete.
+  deletedAt DateTime?
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([chatId, userId])
+  @@index([userId])
+  @@map("chat_members")
+}
+
+model Message {
+  id        String        @id @default(uuid())
+  chatId    String
+  senderId  String
+  type      MessageType   @default(TEXT)
+  content   String?
+  fileUrl   String?
+  fileName  String?
+  fileSize  Int?
+  status    MessageStatus @default(SENT)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  chat   Chat          @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  sender User          @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  reads  MessageRead[]
+
+  @@index([chatId, createdAt])
+  @@index([senderId])
+  @@map("messages")
+}
+
+model MessageRead {
+  id        String   @id @default(uuid())
+  messageId String
+  userId    String
+  readAt    DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@index([userId])
+  @@map("message_reads")
+}
