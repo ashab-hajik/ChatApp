@@ -27,22 +27,145 @@ A modern full-stack real-time chat application built with **React, TypeScript, N
 
 **Authentication:** JWT, Google OAuth
 
-## 📦 Installation
+# 🚀 Installation Guide
+
+## 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/chat-app.git
+git clone https://github.com/ashab-hajik/ChatApp.git
+cd ChatApp
+```
 
+---
+
+## 2. Install Dependencies
+
+### Frontend
+
+```bash
 cd client
 npm install
-npm run dev
+```
 
+### Backend
+
+```bash
 cd ../server
 npm install
+```
+
+---
+
+## 3. Configure PostgreSQL
+
+- Install PostgreSQL.
+- Create a new database (e.g. `chatapp`).
+- Copy the database connection string.
+
+Example:
+
+```env
+DATABASE_URL="postgresql://postgres:password@localhost:5432/chatapp?schema=public"
+```
+
+---
+
+## 4. Configure Google OAuth
+
+1. Go to **Google Cloud Console**.
+2. Create a new project.
+3. Configure the **OAuth Consent Screen**.
+4. Create an **OAuth 2.0 Client ID**.
+5. Add the following:
+
+### Authorized JavaScript Origins
+
+```text
+http://localhost:5174
+http://127.0.0.1:5174
+```
+
+### Authorized Redirect URI
+
+```text
+http://localhost:3001/api/auth/google/callback
+```
+
+6. Copy the **Client ID** and **Client Secret**.
+
+---
+
+## 5. Create a `.env` File
+
+Inside the `server` folder, create a `.env` file.
+
+```env
+DATABASE_URL=your_postgresql_database_url
+
+JWT_SECRET=your_jwt_secret
+
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+PORT=3001
+NODE_ENV=development
+```
+
+---
+
+## 6. Generate Prisma Client
+
+```bash
+cd server
+npx prisma generate
+```
+
+---
+
+## 7. Run Database Migration
+
+```bash
+npx prisma migrate dev
+```
+
+---
+
+## 8. Start the Backend
+
+```bash
 npm run dev
 ```
 
-Create a `.env` file in the `server` folder and add the required environment variables.
+Backend will run at:
 
+```text
+http://localhost:3001
+```
+
+---
+
+## 9. Start the Frontend
+
+Open a new terminal.
+
+```bash
+cd client
+npm run dev
+```
+
+Frontend will run at:
+
+```text
+http://localhost:5174
+```
+
+---
+
+## 📌 Notes
+
+- Ensure PostgreSQL is running before starting the backend.
+- Make sure your `.env` file is configured correctly.
+- Update the Google OAuth credentials with your own **Client ID** and **Client Secret** before logging in with Google.
 
 ## 📸 Screenshots
 
