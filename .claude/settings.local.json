@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(curl -s -o /dev/null -w \"status=%{http_code} content-type=%{content_type}\\\\n\" http://localhost:5000/api/files/0e04d68b-5869-4949-a7c1-f578111bcd36.png)",
-      "Bash(curl -sI \"http://localhost:5000/api/files/0e04d68b-5869-4949-a7c1-f578111bcd36.png?name=my-pixel.png\")",
-      "Bash(curl -s -o /dev/null -w \"status=%{http_code}\\\\n\" http://localhost:5000/api/files/does-not-exist.png)"
-    ]
-  }
-}
