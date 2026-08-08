@@ -84,7 +84,7 @@ export function MessageInput({ chatId }: { chatId: string }) {
         <AttachmentPreview file={attachment} previewUrl={previewUrl} onCancel={cancelAttachment} />
       )}
 
-      <form onSubmit={handleSubmit} className="flex items-center gap-2 border-t border-gray-200 bg-white p-3">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2 border-t border-gray-200 bg-slate-50 p-3">
         <input
           ref={fileInputRef}
           type="file"

@@ -52,7 +52,7 @@ export function ChatWindowPage() {
   if (isLoading || !chat) return <FullPageSpinner />;
 
   return (
-    <div className="flex h-full flex-col bg-[#f0f2f5]">
+    <div className="flex h-full flex-col chat-background bg-[#f0f2f5]">
       <ChatHeader chat={chat} isSearchOpen={isSearchOpen} onToggleSearch={() => setIsSearchOpen((v) => !v)} />
 
       {isSearchOpen && (

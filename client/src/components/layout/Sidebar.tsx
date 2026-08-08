@@ -28,7 +28,7 @@ export function Sidebar() {
   });
 
   return (
-    <div className="flex h-full flex-col bg-white">
+    <div className="flex h-full flex-col bg-slate-50">
       <SidebarHeader onNewChat={() => setIsNewChatOpen(true)} onCreateGroup={() => setIsCreateGroupOpen(true)} />
       <SidebarSearch value={query} onChange={setQuery} />
 
